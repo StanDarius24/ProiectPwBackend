@@ -32,7 +32,7 @@ module.exports = {
         } else {
             return res.status(401).send("No authorization header found.");
         }
-    },    
+    },
     hasAuthFields: (req, res, next) => {
         let errors = [];
 
@@ -55,12 +55,12 @@ module.exports = {
     },
     isPasswordAndUserMatch: async (req, res, next) => {
         const myPlaintextPassword = req.body.password;
-        const myEmail = req.body.email;          
-              
+        const myEmail = req.body.email;
+
         const user = await db.table('users').filter({$or:[{ email : myEmail },{ username : myEmail }]}).get();
         if (user) {
             const match = await bcrypt.compare(myPlaintextPassword, user.password);
-            
+
             if (match) {
                 req.username = user.username;
                 req.email = user.email;
@@ -68,13 +68,13 @@ module.exports = {
             } else {
                 res.status(401).send("Username or password incorrect");
             }
-            
+
         } else {
             res.status(401).send("Username or password incorrect");
         }
-        
-        
-        
+
+
+
 
     }
 

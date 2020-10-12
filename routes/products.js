@@ -23,6 +23,7 @@ router.get('/', function (req, res) {       // Sending Page Query Parameter is m
             'p.descriere as descriere',
             'p.datalansarii as data',
             'p.picture as img',
+            'p.categorie as categorie',
             'p.id as id'
         ])
         .slice(startValue, endValue)
@@ -39,6 +40,130 @@ router.get('/', function (req, res) {       // Sending Page Query Parameter is m
             }
         })
         .catch(err => console.log(err));
+});
+
+router.get('/:prodId', function (req, res){
+    let produseid=req.params.prodId;
+    console.log(produseid);
+
+    database.table('produse as p')
+
+        .withFields([
+            'p.name as name',
+            'p.pret as pret',
+            'p.descriere as descriere',
+            'p.datalansarii as data',
+            'p.picture as img',
+            'p.categorie as categorie',
+            'p.id as id'
+        ]).filter({'p.id' : produseid})
+        .get()
+        .then(prod => {
+            if (prod) {
+                res.status(200).json(prod);
+            } else {
+                res.json({message: "No product found with id ${produseid} "});
+            }
+        })
+        .catch(err => console.log(err));
+
+});
+router.get('/name/:nume', function (req, res){
+    let nume=req.params.nume;
+    console.log(nume);
+
+    database.table('produse as p')
+
+        .withFields([
+            'p.name as name',
+            'p.pret as pret',
+            'p.descriere as descriere',
+            'p.datalansarii as data',
+            'p.picture as img',
+            'p.categorie as categorie',
+            'p.id as id'
+        ]).filter({'p.name' : nume})
+        .get()
+        .then(prod => {
+            if (prod) {
+                res.status(200).json(prod);
+            } else {
+                res.json({message: "No product found with id ${nume} "});
+            }
+        })
+        .catch(err => console.log(err));
+
+});
+
+router.get('/categorie/:nume',function (req,res){
+    let page = (req.query.page !== undefined && req.query.page !== 0) ? req.query.page : 1;
+    const limit = (req.query.limit !== undefined && req.query.limit !== 0) ? req.query.limit : 10;   // set limit of items per page
+    const cat_title=req.params.nume;
+    console.log(cat_title);
+    let startValue;
+    let endValue;
+    if (page > 0) {
+        startValue = (page * limit) - limit;     // 0, 10, 20, 30
+        endValue = page * limit;                  // 10, 20, 30, 40
+    } else {
+        startValue = 0;
+        endValue = 10;
+    }
+    database.table('produse as p')
+        .withFields([
+            'p.name as name',
+            'p.pret as pret',
+            'p.descriere as descriere',
+            'p.datalansarii as data',
+            'p.picture as img',
+            'p.categorie as categorie',
+            'p.id as id'
+        ])
+        .slice(startValue, endValue)
+        .sort({id: .1})
+        .filter({'categorie' : cat_title})
+        .getAll()
+        .then(prods => {
+            if (prods.length > 0) {
+                res.status(200).json({
+                    count: prods.length,
+                    products: prods
+                });
+            } else {
+                res.json({message: "No products found from ${cat_title} category"});
+            }
+        })
+        .catch(err => console.log(err));
+});
+
+router.post('/list', function (req, res) {
+
+    console.log(req.body);
+    console.log(req.params);
+    let id = req.params.id;
+    console.log(req.body.id);
+    console.log(id);
+/*
+    if (id !== null && id > 0) {
+        database.table('produse as p').withFields([
+            'p.name as name',
+            'p.pret as pret',
+            'p.descriere as descriere',
+            'p.datalansarii as data',
+            'p.picture as img',
+            'p.categorie as categorie',
+            'p.id as id'
+        ])
+            .insert({
+                id: id,
+                name: nume,
+                descriere: descriere,
+                data: data,
+                categorie: categorie,
+                pret: pret,
+                img: poza
+            })
+    } */
 });
 
 module.exports = router;

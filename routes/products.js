@@ -136,34 +136,30 @@ router.get('/categorie/:nume',function (req,res){
         .catch(err => console.log(err));
 });
 
-router.post('/list', function (req, res) {
+router.post('/list',  (req, res) => {
 
     console.log(req.body);
-    console.log(req.params);
-    let id = req.params.id;
     console.log(req.body.id);
-    console.log(id);
-/*
+    let id=req.body.id;
+    let nume=req.body.name;
+    let descriere=req.body.descriere;
+    let data=req.body.datalansarii;
+    let categorie=req.body.categorie;
+    let pret=req.body.pret;
+    let poza=req.body.picture;
+    var sql="SET @id = ?;SET @name = ?; SET @descriere = ?; SET @data = ?; SET @categorie = ?; SET @pret = ?; SET @picture = ?";
     if (id !== null && id > 0) {
-        database.table('produse as p').withFields([
-            'p.name as name',
-            'p.pret as pret',
-            'p.descriere as descriere',
-            'p.datalansarii as data',
-            'p.picture as img',
-            'p.categorie as categorie',
-            'p.id as id'
-        ])
+        database.table('produse')
             .insert({
                 id: id,
                 name: nume,
                 descriere: descriere,
-                data: data,
+                datalansarii: data,
                 categorie: categorie,
                 pret: pret,
-                img: poza
-            })
-    } */
+                picture: poza
+            }).catch(err => console.log(err));
+    }
 });
 
 module.exports = router;

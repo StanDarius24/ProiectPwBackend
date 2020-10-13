@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {database} = require('../config/helpers');
-
+let ids;
 /* GET ALL PRODUCTS */
 router.get('/', function (req, res) {       // Sending Page Query Parameter is mandatory http://localhost:3636/api/products?page=1
     let page = (req.query.page !== undefined && req.query.page !== 0) ? req.query.page : 1;
@@ -31,6 +31,7 @@ router.get('/', function (req, res) {       // Sending Page Query Parameter is m
         .getAll()
         .then(prods => {
             if (prods.length > 0) {
+            	ids=prods.length;
                 res.status(200).json({
                     count: prods.length,
                     products: prods
@@ -88,7 +89,7 @@ router.get('/name/:nume', function (req, res){
             if (prod) {
                 res.status(200).json(prod);
             } else {
-                res.json({message: "No product found with id ${nume} "});
+                res.json({message: "No product found with numele ${nume} "});
             }
         })
         .catch(err => console.log(err));
@@ -137,10 +138,11 @@ router.get('/categorie/:nume',function (req,res){
 });
 
 router.post('/list',  (req, res) => {
-
+	ids=ids+1;
     console.log(req.body);
     console.log(req.body.id);
-    let id=req.body.id;
+    let id=ids;
+
     let nume=req.body.name;
     let descriere=req.body.descriere;
     let data=req.body.datalansarii;

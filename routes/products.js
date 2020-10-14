@@ -69,7 +69,7 @@ router.get('/:prodId', function (req, res){
         .catch(err => console.log(err));
 
 });
-router.get('/name/:nume', function (req, res){
+router.get('/search/:nume', function (req, res){
     let nume=req.params.nume;
     console.log(nume);
 
@@ -163,5 +163,17 @@ router.post('/list',  (req, res) => {
             }).catch(err => console.log(err));
     }
 });
+
+router.delete('/sterge',(req, res) =>
+    {
+      let ids=req.body.id;
+      console.log(ids);
+      database.table('produse')
+          .filter({'produse.id' : ids})
+          .remove()
+          .then(successNUM =>{
+              console.log(successNUM)
+          })
+    });
 
 module.exports = router;

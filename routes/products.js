@@ -164,9 +164,10 @@ router.post('/list',  (req, res) => {
     }
 });
 
-router.delete('/sterge',(req, res) =>
+router.delete('/sterge/:id',(req, res) =>
     {
-      let ids=req.body.id;
+    	console.log("MERGE IN BACK");
+      let ids=req.params.id;
       console.log(ids);
       database.table('produse')
           .filter({'produse.id' : ids})

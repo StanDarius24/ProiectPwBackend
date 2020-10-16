@@ -138,10 +138,10 @@ router.get('/categorie/:nume',function (req,res){
 });
 
 router.post('/list',  (req, res) => {
-	ids=ids+1;
+	
     console.log(req.body);
-    console.log(req.body.id);
-    let id=ids;
+   
+    
 
     let nume=req.body.name;
     let descriere=req.body.descriere;
@@ -150,10 +150,9 @@ router.post('/list',  (req, res) => {
     let pret=req.body.pret;
     let poza=req.body.picture;
     var sql="SET @id = ?;SET @name = ?; SET @descriere = ?; SET @data = ?; SET @categorie = ?; SET @pret = ?; SET @picture = ?";
-    if (id !== null && id > 0) {
+     
         database.table('produse')
             .insert({
-                id: id,
                 name: nume,
                 descriere: descriere,
                 datalansarii: data,
@@ -161,7 +160,7 @@ router.post('/list',  (req, res) => {
                 pret: pret,
                 picture: poza
             }).catch(err => console.log(err));
-    }
+    
 });
 
 router.delete('/sterge/:id',(req, res) =>
@@ -176,5 +175,19 @@ router.delete('/sterge/:id',(req, res) =>
               console.log(successNUM)
           })
     });
+router.put('/editare/nume',(req,res) =>{
+	let numelevechi=req.body.name;
+	let numelenou=req.body.nou;
+	console.log("nume vechi " + numelevechi + " cu noul" + numelenou);
+	database.table('produse')
+		.filter({name : numelevechi })
+		.update({
+			name: numelenou
+		})
+		.then(successNUM => {
+			console.log(successNUM)
+		})
+});
 
 module.exports = router;
+

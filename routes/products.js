@@ -31,7 +31,7 @@ router.get('/', function (req, res) {       // Sending Page Query Parameter is m
         .getAll()
         .then(prods => {
             if (prods.length > 0) {
-            	ids=prods.length;
+            	ids=prods.length+1;
                 res.status(200).json({
                     count: prods.length,
                     products: prods
@@ -101,6 +101,7 @@ router.get('/categorie/:nume',function (req,res){
     const limit = (req.query.limit !== undefined && req.query.limit !== 0) ? req.query.limit : 10;   // set limit of items per page
     const cat_title=req.params.nume;
     console.log(cat_title);
+    
     let startValue;
     let endValue;
     if (page > 0) {
@@ -140,8 +141,8 @@ router.get('/categorie/:nume',function (req,res){
 router.post('/list',  (req, res) => {
 	
     console.log(req.body);
-   
-    
+   	ids=ids+1;
+    let id=ids;
 
     let nume=req.body.name;
     let descriere=req.body.descriere;
@@ -153,6 +154,7 @@ router.post('/list',  (req, res) => {
      
         database.table('produse')
             .insert({
+            	
                 name: nume,
                 descriere: descriere,
                 datalansarii: data,
@@ -166,28 +168,44 @@ router.post('/list',  (req, res) => {
 router.delete('/sterge/:id',(req, res) =>
     {
     	console.log("MERGE IN BACK");
-      let ids=req.params.id;
-      console.log(ids);
+      let idc=req.params.id;
+      console.log(idc);
+
       database.table('produse')
-          .filter({'produse.id' : ids})
+          .filter({'produse.id' : idc})
           .remove()
           .then(successNUM =>{
-              console.log(successNUM)
+          		console.log("Merge in back");
+              console.log(successNUM);
           })
     });
+
 router.put('/editare/nume',(req,res) =>{
-	let numelevechi=req.body.name;
-	let numelenou=req.body.nou;
-	console.log("nume vechi " + numelevechi + " cu noul" + numelenou);
+	let id =req.body.id;
+	let nume=req.body.name;
+	let pret=req.body.pret;
+	let descriere=req.body.descriere;
+	let datalansarii=req.body.datalansarii;
+	let picture=req.body.picture;
+	let categorie=req.body.categorie;
+	
+	
+	console.log("Am editat");
 	database.table('produse')
-		.filter({name : numelevechi })
+		.filter({id : id })
 		.update({
-			name: numelenou
+			name: nume,
+			pret: pret,
+			descriere: descriere,
+			datalansarii: datalansarii,
+			picture: picture,
+			categorie: categorie
 		})
 		.then(successNUM => {
 			console.log(successNUM)
 		})
-});
+} 
+);
 
 module.exports = router;
 

@@ -42,10 +42,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Import Routes
 
 const productsRouter = require('./routes/products');
-
+const productsRouter2 = require('./routes/categorie');
 
 
 app.use('/api/products', productsRouter);
-
+app.use('/api/categorie', productsRouter2);
 
 module.exports = app;

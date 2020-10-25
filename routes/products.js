@@ -138,7 +138,7 @@ router.get('/categorie/:nume',function (req,res){
         .catch(err => console.log(err));
 });
 
-router.post('/list',  (req, res) => {
+router.post('/list/:cats',  (req, res) => {
 	
     console.log(req.body);
    	ids=ids+1;
@@ -147,7 +147,7 @@ router.post('/list',  (req, res) => {
     let nume=req.body.name;
     let descriere=req.body.descriere;
     let data=req.body.datalansarii;
-    let categorie=req.body.categorie;
+    let categorie=req.params.cats;
     let pret=req.body.pret;
     let poza=req.body.picture;
     var sql="SET @id = ?;SET @name = ?; SET @descriere = ?; SET @data = ?; SET @categorie = ?; SET @pret = ?; SET @picture = ?";
